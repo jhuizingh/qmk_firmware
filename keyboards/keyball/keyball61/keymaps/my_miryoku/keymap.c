@@ -20,22 +20,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
-enum custom_keycodes = {
+enum custom_keycodes {
   MACRO_DBL_CLICK = SAFE_RANGE
 };
 
+
+// Function to handle custom keycodes
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-    case MACRO_DBL_CLICK:
-        if (record->event.pressed) {
-            // when keycode QMKBEST is pressed
-            SEND_STRING("QMK is the best thing ever!");
-        } else {
-            // when keycode QMKBEST is released
-        }
-        break;
+        case MACRO_DBL_CLICK:
+            if (record->event.pressed) {
+                // When the key is pressed, send two MS_BTN1 clicks
+                // Send first click
+                tap_code(MS_BTN1);
+                // Add a small delay between clicks (e.g., 50ms)
+                // This delay is important for the operating system to register two distinct clicks.
+                // Adjust as needed for your system's responsiveness.
+                wait_ms(50); // Use _delay_ms for blocking delay
+                // Send second click
+                tap_code(MS_BTN1);
+            }
+            // Return false to indicate that we have handled this keycode
+            // and QMK should not process it further as a standard key.
+            return false;
+        default:
+            // For all other keycodes, let QMK handle them normally
+            return true;
     }
-    return true;
 };
 
 
@@ -72,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_MOUSE_AND_FKEYS] = LAYOUT_right_ball(
     SSNP_FRE , KC_F1    , KC_F2    , KC_F3    , KC_F4    , KC_F5    ,                                  KC_F6    , KC_F7    , KC_F8    , KC_F9    , KC_F10   , KC_F11   ,
-    SSNP_VRT , _______  , _______ , _______ , _______ , _______  ,                                  KC_PGUP  ,  QK_MOUSE_WHEEL_LEFT , QK_MOUSE_WHEEL_UP , QK_MOUSE_WHEEL_RIGHT  , _______  , KC_F12   ,
+    SSNP_VRT , _______  , _______ , _______ , _______ , _______  ,                                  MACRO_DBL_CLICK  ,  QK_MOUSE_WHEEL_LEFT , QK_MOUSE_WHEEL_UP , QK_MOUSE_WHEEL_RIGHT  , _______  , KC_F12   ,
     SSNP_HOR , _______  , _______ , _______ , _______ , _______ ,                                  _______  , QK_MOUSE_BUTTON_1 , QK_MOUSE_BUTTON_3  , QK_MOUSE_BUTTON_2  , _______  , _______  ,
     _______  , _______  , _______ , _______ , _______ , _______ , _______  ,            _______  , KC_PGDN  , _______  ,  QK_MOUSE_WHEEL_DOWN  , _______  , _______  , _______  ,
     _______  , _______  , _______  , _______ , _______ , _______ , _______ ,             _______ , _______ , _______ ,_______
