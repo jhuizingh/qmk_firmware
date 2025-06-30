@@ -20,13 +20,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
+enum custom_keycodes = {
+  MACRO_DBL_CLICK = SAFE_RANGE
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case MACRO_DBL_CLICK:
+        if (record->event.pressed) {
+            // when keycode QMKBEST is pressed
+            SEND_STRING("QMK is the best thing ever!");
+        } else {
+            // when keycode QMKBEST is released
+        }
+        break;
+    }
+    return true;
+};
+
+
 enum layer_names {
   _QWERTY, // Layer 0
   _ARROW_FUNC, // Layer 1
   _MOUSE_AND_FKEYS, // Layer 2
   _RGB_KEYBOARDCFG, // Layer 3
   _NUMPAD, // Layer 4
-  _LAY_5, // Layer 5
+  _SYMBOLS, // Layer 5
 };
 
 // clang-format off
@@ -40,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Bottom Row Left
     SCRL_TO  , KC_LCTL  , KC_LALT  , KC_LGUI, LT(_NUMPAD,KC_TAB), LT(_MOUSE_AND_FKEYS,KC_ESC), LT(_ARROW_FUNC,KC_ENT),
                                                                                               // Bottom Row Right
-                                                                                              LT(_LAY_5,KC_BSPC) , LT(_RGB_KEYBOARDCFG,KC_SPACE) , LT(6,KC_DEL) , TG(_MOUSE_AND_FKEYS)
+                                                                                              LT(_SYMBOLS,KC_BSPC) , LT(_RGB_KEYBOARDCFG,KC_SPACE) , LT(6,KC_DEL) , TG(_MOUSE_AND_FKEYS)
   ),
 
   [_ARROW_FUNC] = LAYOUT_right_ball(
@@ -75,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______  , _______  , _______  , _______ , _______ , _______ , _______ ,    KC_DOT , KC_0 , _______ , _______
   ),
 
-  [_LAY_5] = LAYOUT_right_ball(
+  [_SYMBOLS] = LAYOUT_right_ball(
     _______  , _______   , _______  , _______  , _______  , _______  ,                                  _______  , _______  , _______  , _______ , _______ , _______  ,
     _______  , _______  , _______  , _______  , _______  , _______  ,                                  _______  , _______  , _______  , _______ , _______  , _______  ,
     _______ , _______  , _______  , _______  , _______  , _______  ,                                  _______  , _______ , _______ , _______  , _______ , _______  ,
