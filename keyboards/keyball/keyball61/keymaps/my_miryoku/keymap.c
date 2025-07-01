@@ -84,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_MOUSE_AND_FKEYS] = LAYOUT_right_ball(
     SSNP_FRE , KC_F1    , KC_F2    , KC_F3    , KC_F4    , KC_F5    ,                                  KC_F6    , KC_F7    , KC_F8    , KC_F9    , KC_F10   , KC_F11   ,
     SSNP_VRT , _______  , _______ , _______ , _______ , _______  ,                                  MACRO_DBL_CLICK  ,  QK_MOUSE_WHEEL_LEFT , QK_MOUSE_WHEEL_UP , QK_MOUSE_WHEEL_RIGHT  , _______  , KC_F12   ,
-    SSNP_HOR , _______  , _______ , _______ , _______ , _______ ,                                  _______  , QK_MOUSE_BUTTON_1 , QK_MOUSE_BUTTON_3  , QK_MOUSE_BUTTON_2  , _______  , _______  ,
+    SSNP_HOR , _______  , _______ , _______ , _______ , _______ ,                                  MACRO_DBL_CLICK  , QK_MOUSE_BUTTON_1 , QK_MOUSE_BUTTON_3  , QK_MOUSE_BUTTON_2  , _______  , _______  ,
     _______  , _______  , _______ , _______ , _______ , _______ , _______  ,            _______  , KC_PGDN  , _______  ,  QK_MOUSE_WHEEL_DOWN  , _______  , _______  , _______  ,
     _______  , _______  , _______  , _______ , _______ , _______ , _______ ,             _______ , _______ , _______ ,_______
   ),
