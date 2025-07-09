@@ -62,7 +62,7 @@ enum layer_names {
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_right_ball(
-    KC_GRV   , KC_0     , KC_2     , KC_3     , KC_4     , KC_5     ,                                  KC_6     , KC_7     , KC_8     , KC_9     , KC_0     , KC_MINS  ,
+    KC_GRV   , KC_1     , KC_2     , KC_3     , KC_4     , KC_5     ,                                  KC_6     , KC_7     , KC_8     , KC_9     , KC_0     , KC_MINS  ,
     QK_BOOT  , KC_Q     , KC_W     , KC_E     , KC_R     , KC_T     ,                                  KC_Y     , KC_U     , KC_I     , KC_O     , KC_P     , KC_BSLS  ,
     QK_REBOOT, LGUI_T(KC_A) , LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G ,                         KC_H     , RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT ,
     MO(1)    , KC_Z     , KC_X     , KC_C     , KC_V     , KC_B     , KC_LBRC  ,              KC_RBRC, KC_N     , KC_M     , KC_COMM  , KC_DOT   , KC_SLSH  , TG(2)  ,
@@ -76,9 +76,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ARROW_FUNC] = LAYOUT_right_ball(
     S(KC_ESC), S(KC_1)  , S(KC_2)  , S(KC_3)  , S(KC_4)  , S(KC_5)  ,                                  S(KC_6)  ,S(KC_7), S(KC_8)  , S(KC_9)  , S(KC_0)  , _______ ,
     S(KC_DEL),  _______ , _______  , _______  , _______  , _______  ,                                  G(KC_R)  , G(KC_V)  , G(KC_C)  , G(KC_X)  , G(KC_Z)  , S(KC_INT3) ,
-    S(KC_TAB), _______  , _______  , _______  , _______  , _______  ,                                  S(KC_H)  , S(KC_J)  , S(KC_K)  , S(KC_L)  , KC_QUOT  , S(KC_2)  ,
-    _______  , _______  , _______  , _______  , _______  , _______  , _______ ,         S(KC_BSLS)  , KC_INS  , KC_HOME  , KC_PGDN , KC_PGUP, KC_END , _______ ,
-    _______  , S(KC_LCTL)  , S(KC_LALT)  , S(KC_LGUI) , _______ , _______ , _______ ,    _______ , _______ , LT(6,KC_DEL) , QK_BOOT
+    S(KC_TAB), _______  , _______  , _______  , _______  , _______  ,                                  KC_LEFT  , KC_DOWN  , KC_UP  , KC_RIGHT  , KC_QUOT  , S(KC_2)  ,
+    QK_REBOOT  , _______  , _______  , _______  , _______  , _______  , _______ ,         S(KC_BSLS)  , KC_INS  , KC_HOME  , KC_PGDN , KC_PGUP, KC_END , QK_REBOOT ,
+    QK_BOOT, S(KC_LCTL)  , S(KC_LALT)  , S(KC_LGUI) , _______ , _______ , _______ ,    _______ , _______ , LT(6,KC_DEL) , QK_BOOT
   ),
 
   [_MOUSE_AND_FKEYS] = LAYOUT_right_ball(
