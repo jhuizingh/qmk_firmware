@@ -59,6 +59,44 @@ enum layer_names {
   _SYMBOLS, // Layer 5
 };
 
+
+
+// Define an enum for your tap dance keys
+enum tap_dance_keycodes {
+    TD_MOUSE_LAYER_SET, // Your custom tap dance key
+};
+
+
+// Function to handle the tap dance logic
+void td_my_layer_toggle_finished(tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        // Single tap: Turn the layer OFF
+        layer_off(_MOUSE_AND_FKEYS);
+    } else if (state->count == 2) {
+        // Double tap: Turn the layer ON
+        layer_on(_MOUSE_AND_FKEYS);
+    }
+    // For any other number of taps (e.g., triple tap), you could add more logic
+    // or simply do nothing, as is the case here.
+}
+
+void td_my_layer_toggle_reset(tap_dance_state_t *state, void *user_data) {
+    // This function is called when the tap dance sequence is completed or reset.
+    // For this specific logic, we don't need to do anything here.
+    // It's useful for cleaning up states if you were doing something more complex
+    // like momentarily enabling a modifier during a tap dance.
+}
+
+
+
+// Register your tap dance actions
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_MOUSE_LAYER_SET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_my_layer_toggle_finished, td_my_layer_toggle_reset),
+    // The first argument (NULL) means no function is called on each individual tap.
+    // We only care about the final state (number of taps) in `td_my_layer_toggle_finished`.
+};
+
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QWERTY] = LAYOUT_right_ball(
@@ -70,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Bottom Row Left
     SCRL_TO  , KC_LCTL  , KC_LALT  , KC_LGUI, LT(_NUMPAD,KC_TAB), LT(_MOUSE_AND_FKEYS,KC_ESC), LT(_ARROW_FUNC,KC_ENT),
                                                                                               // Bottom Row Right
-                                                                                              LT(_SYMBOLS,KC_BSPC) , LT(_RGB_KEYBOARDCFG,KC_SPACE) , LT(6,KC_DEL) , TG(_MOUSE_AND_FKEYS)
+                                                                                              LT(_SYMBOLS,KC_BSPC) , LT(_RGB_KEYBOARDCFG,KC_SPACE) , LT(6,KC_DEL) , TD(TD_MOUSE_LAYER_SET)
   ),
 
   [_ARROW_FUNC] = LAYOUT_right_ball(
@@ -147,3 +185,5 @@ void oledkit_render_info_user(void) {
     keyball_oled_render_layerinfo();
 }
 #endif
+
+
