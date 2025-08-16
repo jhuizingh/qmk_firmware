@@ -20,16 +20,55 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
+/*******************************************************************************************
+ *
+ * ENUM DECLARATIONS
+ *
+*******************************************************************************************/
+
+enum layer_names {
+  _QWERTY, // Layer 0
+  _ARROW_FUNC, // Layer 1
+  _MOUSE_AND_FKEYS, // Layer 2
+  _RGB_KEYBOARDCFG, // Layer 3
+  _NUMPAD, // Layer 4
+  _SYMBOLS, // Layer 5
+};
+
 enum custom_keycodes {
   MACRO_DBL_CLICK = SAFE_RANGE
 };
 
+/*******************************************************************************************
+ *
+ * CUSTOM TAPPING TERM
+ *
+*******************************************************************************************/
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        // case SFT_T(KC_SPC):
+        //     return TAPPING_TERM + 1250;
+        // case LT(1, KC_GRV):
+        //     return 130;
+        default:
+            return TAPPING_TERM;
+    }
+}
+
+/*******************************************************************************************
+ *
+ * CUSTOM MACROS
+ *
+*******************************************************************************************/
 
 // Function to handle custom keycodes
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MACRO_DBL_CLICK:
             if (record->event.pressed) {
+                            SEND_STRING("macro triggered");
+
                 // When the key is pressed, send two MS_BTN1 clicks
                 // Send first click
                 tap_code(MS_BTN1);
@@ -50,15 +89,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 };
 
 
-enum layer_names {
-  _QWERTY, // Layer 0
-  _ARROW_FUNC, // Layer 1
-  _MOUSE_AND_FKEYS, // Layer 2
-  _RGB_KEYBOARDCFG, // Layer 3
-  _NUMPAD, // Layer 4
-  _SYMBOLS, // Layer 5
-};
-
+/*******************************************************************************************
+ *
+ * TAP DANCE
+ *
+*******************************************************************************************/
 
 
 // Define an enum for your tap dance keys
@@ -80,21 +115,25 @@ void td_my_layer_toggle_finished(tap_dance_state_t *state, void *user_data) {
     // or simply do nothing, as is the case here.
 }
 
-void td_my_layer_toggle_reset(tap_dance_state_t *state, void *user_data) {
-    // This function is called when the tap dance sequence is completed or reset.
-    // For this specific logic, we don't need to do anything here.
-    // It's useful for cleaning up states if you were doing something more complex
-    // like momentarily enabling a modifier during a tap dance.
-}
-
-
+// This function is called when the tap dance sequence is completed or reset.
+// For this specific logic, we don't need to do anything here.
+// It's useful for cleaning up states if you were doing something more complex
+// like momentarily enabling a modifier during a tap dance.
+void td_my_layer_toggle_reset(tap_dance_state_t *state, void *user_data) { }
 
 // Register your tap dance actions
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_MOUSE_LAYER_SET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_my_layer_toggle_finished, td_my_layer_toggle_reset),
     // The first argument (NULL) means no function is called on each individual tap.
     // We only care about the final state (number of taps) in `td_my_layer_toggle_finished`.
+    [TD_MOUSE_LAYER_SET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_my_layer_toggle_finished, td_my_layer_toggle_reset),
 };
+
+
+/*******************************************************************************************
+ *
+ * KEYMAP
+ *
+*******************************************************************************************/
 
 
 // clang-format off
@@ -128,11 +167,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_RGB_KEYBOARDCFG] = LAYOUT_right_ball(
-    RGB_TOG  , AML_TO   , AML_I50  , AML_D50  , _______  , _______  ,                                  RGB_M_P  , RGB_M_B  , RGB_M_R  , RGB_M_SW , RGB_M_SN , RGB_M_K  ,
-    RGB_MOD  , RGB_HUI  , RGB_SAI  , RGB_VAI  , _______  , _______  ,                                  RGB_M_X  , RGB_M_G  , RGB_M_T  , RGB_M_TW , _______  , _______  ,
-    RGB_RMOD , RGB_HUD  , RGB_SAD  , RGB_VAD  , _______  , _______  ,                                  CPI_D1K  , CPI_D100 , CPI_I100 , CPI_I1K  , KBC_SAVE , KBC_RST  ,
+    RGB_TOG  , AML_TO   , AML_I50  , AML_D50  , _______  , DT_PRNT  ,                                  RGB_M_P  , RGB_M_B  , RGB_M_R  , RGB_M_SW , RGB_M_SN , RGB_M_K  ,
+    RGB_MOD  , RGB_HUI  , RGB_SAI  , RGB_VAI  , _______  , DT_UP    ,                                  RGB_M_X  , RGB_M_G  , RGB_M_T  , RGB_M_TW , _______  , _______  ,
+    RGB_RMOD , RGB_HUD  , RGB_SAD  , RGB_VAD  , _______  , DT_DOWN  ,                                  CPI_D1K  , CPI_D100 , CPI_I100 , CPI_I1K  , KBC_SAVE , KBC_RST  ,
     _______  , _______  , SCRL_DVD , SCRL_DVI , SCRL_MO  , SCRL_TO  , EE_CLR   ,            EE_CLR   , KC_HOME  , KC_PGDN  , KC_PGUP  , KC_END   , _______  , _______  ,
-    _______  , _______  , _______  , KC_LGUI , LT(1,KC_LNG2) , LT(2,KC_SPC) , LT(3,KC_LNG1) ,    LT(2,KC_ENT) , LT(1,KC_LNG2) , LT(6,KC_DEL) , QK_BOOT
+    _______  , _______  , _______  ,  _______ , _______ , _______ , _______ ,               _______ , _______ , _______ , QK_BOOT
   ),
 
   [_NUMPAD] = LAYOUT_right_ball(
@@ -169,12 +208,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
+
+/*******************************************************************************************
+ *
+ * SCROLL MODE
+ *
+*******************************************************************************************/
 layer_state_t layer_state_set_user(layer_state_t state) {
     // Auto enable scroll mode when the highest layer is 3
     keyball_set_scroll_mode(get_highest_layer(state) == 3);
     return state;
 }
 
+/*******************************************************************************************
+ *
+ * OLED
+ *
+*******************************************************************************************/
 #ifdef OLED_ENABLE
 
 #    include "lib/oledkit/oledkit.h"
