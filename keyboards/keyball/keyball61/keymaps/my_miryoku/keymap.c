@@ -67,8 +67,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MACRO_DBL_CLICK:
             if (record->event.pressed) {
-                            SEND_STRING("macro triggered");
-
                 // When the key is pressed, send two MS_BTN1 clicks
                 // Send first click
                 tap_code(MS_BTN1);
