@@ -47,6 +47,8 @@ enum custom_keycodes {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case LGUI_T(KC_A):
+            return TAPPING_TERM + 50;
         // case SFT_T(KC_SPC):
         //     return TAPPING_TERM + 1250;
         // case LT(1, KC_GRV):
