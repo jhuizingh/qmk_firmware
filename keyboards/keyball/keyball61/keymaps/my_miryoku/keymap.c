@@ -36,8 +36,12 @@ enum layer_names {
 };
 
 enum custom_keycodes {
-  MACRO_DBL_CLICK = SAFE_RANGE
+  MACRO_DBL_CLICK = SAFE_RANGE,
+  JGR_TOG,  // Toggle mouse jiggler
 };
+
+static bool     mouse_jiggle_mode = false;
+static uint32_t jiggle_timer      = 0;
 
 /*******************************************************************************************
  *
@@ -64,6 +68,18 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
  *
 *******************************************************************************************/
 
+void matrix_scan_user(void) {
+    if (mouse_jiggle_mode && timer_elapsed32(jiggle_timer) > 10000) {
+        for (int i = 0; i < 20; i++) {
+            tap_code(KC_MS_UP);
+        }
+        for (int i = 0; i < 20; i++) {
+            tap_code(KC_MS_DOWN);
+        }
+        jiggle_timer = timer_read32();
+    }
+}
+
 // Function to handle custom keycodes
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -82,11 +98,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             // Return false to indicate that we have handled this keycode
             // and QMK should not process it further as a standard key.
             return false;
+        case JGR_TOG:
+            // Toggle mouse jiggler on key press (hold Symbols + M)
+            if (record->event.pressed) {
+                mouse_jiggle_mode = !mouse_jiggle_mode;
+                jiggle_timer      = timer_read32();
+            }
+            return false;
         default:
             // For all other keycodes, let QMK handle them normally
             return true;
     }
-};
+}
 
 
 /*******************************************************************************************
@@ -186,7 +209,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______  , _______   , _______  , _______  , _______  , _______  ,                                  _______  , _______  , _______  , _______ , _______ , _______  ,
     _______  , _______  , _______  , _______  , _______  , _______  ,                                  _______  , _______  , _______  , _______ , _______  , _______  ,
     _______ , _______  , _______  , _______  , _______  , _______  ,                                  _______  , _______ , _______ , _______  , _______ , _______  ,
-    _______  , _______  , _______ , _______ , _______  , _______  , _______ ,            _______   , _______  , _______  , _______  , _______   , _______  , _______  ,
+    _______  , _______  , _______ , _______ , _______  , _______  , _______ ,            _______   , _______  , JGR_TOG , _______  , _______   , _______  , _______  ,
     _______  , _______  , _______  , _______ , _______ , _______ , _______ ,               _______   , _______  , _______ , _______
   ),
 
@@ -230,7 +253,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #    include "lib/oledkit/oledkit.h"
 
 void oledkit_render_info_user(void) {
-    keyball_oled_render_keyinfo();
+    oled_write_P(mouse_jiggle_mode ? PSTR("JIGGLER: ON ") : PSTR("JIGGLER: OFF"), false);
     keyball_oled_render_ballinfo();
     keyball_oled_render_layerinfo();
 }
