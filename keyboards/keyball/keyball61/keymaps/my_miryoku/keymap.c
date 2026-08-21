@@ -71,10 +71,10 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 void matrix_scan_user(void) {
     if (mouse_jiggle_mode && timer_elapsed32(jiggle_timer) > 10000) {
         for (int i = 0; i < 20; i++) {
-            tap_code(KC_MS_UP);
+            tap_code(MS_UP);
         }
         for (int i = 0; i < 20; i++) {
-            tap_code(KC_MS_DOWN);
+            tap_code(MS_DOWN);
         }
         jiggle_timer = timer_read32();
     }
@@ -190,11 +190,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_RGB_KEYBOARDCFG] = LAYOUT_right_ball(
-    RGB_TOG  , AML_TO   , AML_I50  , AML_D50  , _______  , DT_PRNT  ,                                  RGB_M_P  , RGB_M_B  , RGB_M_R  , RGB_M_SW , RGB_M_SN , RGB_M_K  ,
-    RGB_MOD  , RGB_HUI  , RGB_SAI  , RGB_VAI  , _______  , DT_UP    ,                                  RGB_M_X  , RGB_M_G  , RGB_M_T  , RGB_M_TW , _______  , _______  ,
-    RGB_RMOD , RGB_HUD  , RGB_SAD  , RGB_VAD  , _______  , DT_DOWN  ,                                  CPI_D1K  , CPI_D100 , CPI_I100 , CPI_I1K  , KBC_SAVE , KBC_RST  ,
-    _______  , _______  , SCRL_DVD , SCRL_DVI , SCRL_MO  , SCRL_TO  , EE_CLR   ,            EE_CLR   , KC_HOME  , KC_PGDN  , KC_PGUP  , KC_END   , _______  , _______  ,
-    _______  , _______  , _______  ,  _______ , _______ , _______ , _______ ,               _______ , _______ , _______ , QK_BOOT
+    UG_TOGG  , AML_TO   , AML_I50  , AML_D50  , _______  , DT_PRNT  ,                                  RGB_MODE_PLAIN    , RGB_MODE_BREATHE  , RGB_MODE_RAINBOW  , RGB_MODE_SWIRL    , RGB_MODE_SNAKE    , RGB_MODE_KNIGHT   ,
+    UG_NEXT  , UG_HUEU  , UG_SATU  , UG_VALU  , _______  , DT_UP    ,                                  RGB_MODE_XMAS     , RGB_MODE_GRADIENT , RGB_MODE_RGBTEST  , RGB_MODE_TWINKLE  , _______           , _______           ,
+    UG_PREV  , UG_HUED  , UG_SATD  , UG_VALD  , _______  , DT_DOWN  ,                                  CPI_D1K           , CPI_D100          , CPI_I100          , CPI_I1K           , KBC_SAVE          , KBC_RST           ,
+    _______  , _______  , SCRL_DVD , SCRL_DVI , SCRL_MO  , SCRL_TO  , EE_CLR   ,            EE_CLR            , KC_HOME           , KC_PGDN           , KC_PGUP           , KC_END            , _______           , _______           ,
+    _______  , _______  , _______  , _______  , _______  , _______  , _______  ,            _______           , _______           , _______           , QK_BOOT
   ),
 
   [_NUMPAD] = LAYOUT_right_ball(
