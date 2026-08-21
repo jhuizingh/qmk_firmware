@@ -156,3 +156,29 @@ Compile without flashing:
 ```bash
 make keyball/keyball61:my_miryoku -j8
 ```
+
+### Getting a half into the bootloader
+
+`make ...:flash` builds, then waits for an RP2040 to appear as the `RPI-RP2` drive.
+Getting a half there is the fiddly part:
+
+- **The controller's only button is RESET, not BOOTSEL.** Holding it — whether the
+  board is running or being plugged in — does nothing. **Double-tap it**, like a
+  mouse double-click. The board defines `RP2040_BOOTLOADER_DOUBLE_TAP_RESET` with a
+  1-second window (`keyboards/keyball/config.h`), and that is the reliable route.
+- `QK_BOOT` also works from the keymap, but the combos are **half-local**: only keys
+  on the USB-connected half register when the split link is down, which it is
+  whenever the two halves are running different firmware. On layer 1, `QK_BOOT` is
+  the bottom-left corner key of the left half (hold the key left of `Z` to reach the
+  layer); on layer 3 it's the outermost right thumb key (hold right-thumb Space).
+
+**Flash both halves** after any non-trivial QMK bump — move the USB cable to the
+other half and repeat. Split transport changes between QMK versions, so a half left
+on older firmware breaks split comms in ways that look like unrelated bugs.
+
+Handedness comes from `SPLIT_HAND_MATRIX_GRID` (hardware wiring), not `EE_HANDS`, so
+clearing EEPROM cannot scramble which half is which — `EE_CLR` (layer 3) is safe and
+is worth doing after a large version jump, which usually invalidates stored config.
+
+The trackball can take a moment to come up after a flash; the firmware re-probes a
+sensor that failed its first init, so give it a beat before treating it as broken.
