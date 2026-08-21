@@ -157,6 +157,41 @@ Compile without flashing:
 make keyball/keyball61:my_miryoku -j8
 ```
 
+### A flash alone does not change the keymap — VIA owns it
+
+`keymaps/my_miryoku/rules.mk` sets `VIA_ENABLE = yes` (with
+`DYNAMIC_KEYMAP_LAYER_COUNT 8` in its `config.h`). With VIA enabled the **live
+keymap lives in EEPROM**, not in the firmware image. The compiled
+`keymaps[][][]` array only *seeds* EEPROM when EEPROM is blank or its layout
+version changes — otherwise **EEPROM wins and flashing changes nothing.**
+
+So editing `keymap.c` and flashing is only half the job:
+
+```bash
+make keyball/keyball61:my_miryoku:flash -j8
+# then, on the keyboard: EE_CLR — hold right-thumb Space (layer 3) and press
+# either innermost bottom-row key, so the firmware re-seeds the keymap
+```
+
+The failure mode is silent and very convincing. The flash reports
+`Wrote <N> bytes`, the board reboots normally, and the new bindings just aren't
+there. Worse, a key whose stored copy is `_______` is *transparent*, so it falls
+through to the base layer and emits the base-layer letter instead of doing
+nothing — which reads like a broken layer rather than a stale keymap.
+Confirmed 2026-08-21: four consecutive clean flashes adding an F-key grid to
+layer 4 had no effect, and X/C/V kept emitting `x`/`c`/`v`, until `EE_CLR`.
+Hours went into the halves, the cable and the upstream merge; none was at fault.
+
+To see what the board is **actually** running, open <https://remap-keys.app> and
+read the layer there. Remap reads EEPROM over the VIA protocol, so it shows the
+live keymap rather than what you compiled — a layer showing `▽` transparent
+where `keymap.c` has real keycodes means EEPROM is stale. That is the fastest
+way to tell "my flash didn't take" from "my keymap is wrong".
+
+`EE_CLR` discards any VIA/Remap customizations made on the board. Treat
+`keymap.c` as the source of truth and Remap as a read-only inspector, or the two
+will overwrite each other.
+
 ### Getting a half into the bootloader
 
 `make ...:flash` builds, then waits for an RP2040 to appear as the `RPI-RP2` drive.
