@@ -212,8 +212,11 @@ other half and repeat. Split transport changes between QMK versions, so a half l
 on older firmware breaks split comms in ways that look like unrelated bugs.
 
 Handedness comes from `SPLIT_HAND_MATRIX_GRID` (hardware wiring), not `EE_HANDS`, so
-clearing EEPROM cannot scramble which half is which — `EE_CLR` (layer 3) is safe and
-is worth doing after a large version jump, which usually invalidates stored config.
+clearing EEPROM cannot scramble which half is which — `EE_CLR` (layer 3) is always
+safe. It is not merely "worth doing" after a large version jump: because VIA owns the
+keymap (see above), `EE_CLR` is **required after any keymap change**, version jump or
+not. It does discard trackball CPI/scroll settings and any Remap customizations, which
+is the only cost — re-set CPI on layer 3 and `KBC_SAVE` if the pointer feels wrong.
 
 The trackball can take a moment to come up after a flash; the firmware re-probes a
 sensor that failed its first init, so give it a beat before treating it as broken.
