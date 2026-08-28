@@ -170,7 +170,8 @@ So editing `keymap.c` and flashing is only half the job:
 ```bash
 make keyball/keyball61:my_miryoku:flash -j8
 # then, on the keyboard: EE_CLR — hold right-thumb Space (layer 3) and press
-# either innermost bottom-row key, so the firmware re-seeds the keymap
+# `]`, so the firmware re-seeds the keymap. Layer 3 puts EE_CLR on both inner
+# row-3 keys, so `[` works identically.
 ```
 
 The failure mode is silent and very convincing. The flash reports
@@ -205,7 +206,8 @@ Getting a half there is the fiddly part:
   on the USB-connected half register when the split link is down, which it is
   whenever the two halves are running different firmware. On layer 1, `QK_BOOT` is
   the bottom-left corner key of the left half (hold the key left of `Z` to reach the
-  layer); on layer 3 it's the outermost right thumb key (hold right-thumb Space).
+  layer); on layer 3 it's the bottom-rightmost thumb key (hold right-thumb Space,
+  then the outermost right thumb key).
 
 **Flash both halves** after any non-trivial QMK bump — move the USB cable to the
 other half and repeat. Split transport changes between QMK versions, so a half left
